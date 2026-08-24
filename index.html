@@ -17,51 +17,38 @@
         overflow: hidden;
       }
 
-      /*
-    ==========================================
-    AR LANDING PAGE
-    ==========================================
-    */
+      /* ==========================================
+         AR LANDING PAGE
+      ========================================== */
 
       #arPage {
         position: fixed;
-
         inset: 0;
-
         z-index: 9999;
 
         display: flex;
-
         flex-direction: column;
-
         justify-content: center;
-
         align-items: center;
 
         padding: 30px;
 
         background: #111;
-
         color: white;
 
         text-align: center;
-
         font-family: Arial, sans-serif;
       }
 
       #arPage h1 {
         margin: 0 0 10px;
-
         font-size: 30px;
       }
 
       #arPage p {
         max-width: 320px;
-
         margin: 0 0 25px;
-
         line-height: 1.5;
-
         opacity: 0.75;
       }
 
@@ -69,33 +56,26 @@
         padding: 16px 35px;
 
         border: none;
-
         border-radius: 50px;
 
         background: white;
-
         color: black;
 
         font-size: 17px;
-
         font-weight: bold;
 
         cursor: pointer;
       }
 
-      /*
-    ==========================================
-    STATUS
-    ==========================================
-    */
+      /* ==========================================
+         STATUS
+      ========================================== */
 
       #status {
         position: fixed;
-
         z-index: 9998;
 
         top: 20px;
-
         left: 50%;
 
         transform: translateX(-50%);
@@ -105,11 +85,9 @@
         border-radius: 30px;
 
         background: rgba(0, 0, 0, 0.7);
-
         color: white;
 
         font-family: Arial, sans-serif;
-
         font-size: 14px;
 
         display: none;
@@ -118,38 +96,55 @@
   </head>
 
   <body>
-    <!--
-================================================
-AR PAGE
-================================================
--->
+
+    <!-- =========================================
+         AR LANDING PAGE
+    ========================================== -->
 
     <div id="arPage">
       <h1>✨ AR Experience</h1>
 
-      <p>Tap Start AR, then point your camera at the card.</p>
+      <p>
+        Tap Start AR, then point your camera at the card.
+      </p>
 
-      <button id="startAR">Start AR</button>
+      <button id="startAR">
+        Start AR
+      </button>
     </div>
 
-    <!-- STATUS -->
 
-    <div id="status">Point your camera at the card</div>
+    <!-- =========================================
+         STATUS
+    ========================================== -->
 
-    <!--
-================================================
-YOUR ORIGINAL WORKING A-FRAME
-================================================
--->
+    <div id="status">
+      Point your camera at the card
+    </div>
+
+
+    <!-- =========================================
+         A-FRAME / MINDAR
+    ========================================== -->
 
     <a-scene
-      mindar-image="imageTargetSrc: https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.mind;"
+      mindar-image="
+        imageTargetSrc:
+        https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.mind;
+      "
       color-space="sRGB"
       renderer="colorManagement: true, physicallyCorrectLights"
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false"
     >
+
+      <!-- =======================================
+           ASSETS
+      ======================================== -->
+
       <a-assets>
+
+        <!-- VIDEO -->
         <video
           id="arVideo"
           src="video.mp4"
@@ -158,127 +153,446 @@ YOUR ORIGINAL WORKING A-FRAME
           webkit-playsinline
           preload="auto"
         ></video>
+
       </a-assets>
 
-      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <a-entity id="target" mindar-image-target="targetIndex: 0">
-        <a-video
-          src="#arVideo"
-          position="0 0 0.1"
-          width="1"
-          height="0.5625"
-        ></a-video>
+      <!-- =======================================
+           CAMERA
+      ======================================== -->
+
+      <a-camera
+        position="0 0 0"
+        look-controls="enabled: false"
+      ></a-camera>
+
+
+      <!-- =======================================
+           TARGET
+      ======================================== -->
+
+      <a-entity
+        id="target"
+        mindar-image-target="targetIndex: 0"
+      >
+
+
+        <!-- =====================================
+             ENTIRE VIRTUAL STAGE
+        ====================================== -->
+
+        <a-entity
+          id="stage"
+          position="0 0 0"
+          scale="0 0 0"
+        >
+
+
+          <!-- ===================================
+               BACKDROP
+          ==================================== -->
+
+          <a-plane
+            position="0 0.45 -0.30"
+            width="1.8"
+            height="1.1"
+            rotation="0 0 0"
+            color="#151515"
+          ></a-plane>
+
+
+          <!-- ===================================
+               BACKDROP LIGHT
+          ==================================== -->
+
+          <a-plane
+            position="0 0.45 -0.285"
+            width="1.45"
+            height="0.85"
+            color="#242424"
+            opacity="0.8"
+          ></a-plane>
+
+
+          <!-- ===================================
+               STAGE FLOOR
+          ==================================== -->
+
+          <a-cylinder
+            position="0 -0.02 0"
+            radius="0.82"
+            height="0.08"
+            color="#111111"
+          ></a-cylinder>
+
+
+          <!-- ===================================
+               RAISED PLATFORM
+          ==================================== -->
+
+          <a-cylinder
+            position="0 0.08 0"
+            radius="0.62"
+            height="0.12"
+            color="#333333"
+          ></a-cylinder>
+
+
+          <!-- ===================================
+               PLATFORM TOP
+          ==================================== -->
+
+          <a-cylinder
+            position="0 0.145 0"
+            radius="0.55"
+            height="0.025"
+            color="#555555"
+          ></a-cylinder>
+
+
+          <!-- ===================================
+               VIDEO FRAME
+          ==================================== -->
+
+          <a-box
+            position="0 0.65 0.02"
+            width="0.92"
+            height="0.57"
+            depth="0.05"
+            color="#000000"
+          ></a-box>
+
+
+          <!-- ===================================
+               VIDEO
+          ==================================== -->
+
+          <a-video
+            id="videoScreen"
+            src="#arVideo"
+
+            position="0 0.65 0.055"
+
+            width="0.82"
+            height="0.461"
+
+            material="
+              shader: flat;
+              side: double;
+            "
+          ></a-video>
+
+
+          <!-- ===================================
+               LEFT DECORATION
+          ==================================== -->
+
+          <a-cylinder
+            position="-0.62 0.38 0.02"
+            radius="0.07"
+            height="0.42"
+            color="#db4a2b"
+          ></a-cylinder>
+
+
+          <a-sphere
+            position="-0.62 0.60 0.02"
+            radius="0.09"
+            color="#db4a2b"
+          ></a-sphere>
+
+
+          <!-- ===================================
+               RIGHT DECORATION
+          ==================================== -->
+
+          <a-cylinder
+            position="0.62 0.38 0.02"
+            radius="0.07"
+            height="0.42"
+            color="#db4a2b"
+          ></a-cylinder>
+
+
+          <a-sphere
+            position="0.62 0.60 0.02"
+            radius="0.09"
+            color="#db4a2b"
+          ></a-sphere>
+
+
+          <!-- ===================================
+               STAGE LIGHTS
+          ==================================== -->
+
+          <a-light
+            type="ambient"
+            intensity="1.2"
+          ></a-light>
+
+
+          <a-light
+            type="point"
+            position="0 1.5 0.8"
+            intensity="2.5"
+            distance="4"
+          ></a-light>
+
+
+          <a-light
+            type="point"
+            position="-1 1 0.5"
+            intensity="1.5"
+            distance="3"
+          ></a-light>
+
+
+          <a-light
+            type="point"
+            position="1 1 0.5"
+            intensity="1.5"
+            distance="3"
+          ></a-light>
+
+
+          <!-- ===================================
+               FLOATING PARTICLES
+          ==================================== -->
+
+          <a-sphere
+            position="-0.75 0.85 0.05"
+            radius="0.025"
+            color="#ffffff"
+          ></a-sphere>
+
+          <a-sphere
+            position="0.78 0.95 0.05"
+            radius="0.02"
+            color="#ffffff"
+          ></a-sphere>
+
+          <a-sphere
+            position="-0.82 0.25 0.05"
+            radius="0.018"
+            color="#ffffff"
+          ></a-sphere>
+
+          <a-sphere
+            position="0.82 0.30 0.05"
+            radius="0.025"
+            color="#ffffff"
+          ></a-sphere>
+
+
+        </a-entity>
+
       </a-entity>
+
     </a-scene>
 
+
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
+
     <script>
-      /*
-================================================
-ELEMENTS
-================================================
-*/
-
-      const arPage = document.getElementById("arPage");
-
-      const startAR = document.getElementById("startAR");
-
-      const status = document.getElementById("status");
-
-      const video = document.getElementById("arVideo");
-
-      const target = document.getElementById("target");
 
       /*
-================================================
-START AR
-================================================
-*/
+      ==========================================
+      ELEMENTS
+      ==========================================
+      */
 
-      startAR.addEventListener("click", async function () {
-        console.log("START AR BUTTON");
+      const arPage =
+        document.getElementById("arPage");
 
-        /*
-         * IMPORTANT:
-         *
-         * We are NOT starting MindAR
-         * manually.
-         *
-         * The original MindAR scene
-         * remains untouched.
-         */
+      const startAR =
+        document.getElementById("startAR");
 
-        /*
-         * Hide landing page
-         */
+      const status =
+        document.getElementById("status");
 
-        arPage.style.display = "none";
+      const video =
+        document.getElementById("arVideo");
 
-        /*
-         * Show instructions
-         */
+      const target =
+        document.getElementById("target");
 
-        status.style.display = "block";
+      const stage =
+        document.getElementById("stage");
 
-        status.textContent = "Point your camera at the card";
 
-        /*
-         * Enable video sound
-         */
+      /*
+      ==========================================
+      START AR
+      ==========================================
+      */
 
-        video.muted = false;
+      startAR.addEventListener(
+        "click",
+        async function () {
 
-        /*
-         * Prepare video after
-         * user interaction.
-         */
+          console.log("START AR BUTTON");
 
-        try {
-          await video.play();
+          /*
+          Hide landing page
+          */
+
+          arPage.style.display = "none";
+
+
+          /*
+          Show instructions
+          */
+
+          status.style.display = "block";
+
+          status.textContent =
+            "Point your camera at the card";
+
+
+          /*
+          Enable video sound
+          */
+
+          video.muted = false;
+
+
+          /*
+          Prepare video
+          */
+
+          try {
+
+            await video.play();
+
+            video.pause();
+
+            console.log("VIDEO READY");
+
+          } catch (error) {
+
+            console.log(
+              "Video preparation:",
+              error
+            );
+
+          }
+
+        }
+      );
+
+
+      /*
+      ==========================================
+      TARGET FOUND
+      ==========================================
+      */
+
+      target.addEventListener(
+        "targetFound",
+        async function () {
+
+          console.log("TARGET FOUND");
+
+
+          status.textContent =
+            "✓ AR detected";
+
+
+          /*
+          Show stage
+          */
+
+          stage.setAttribute(
+            "animation__scale",
+            {
+              property: "scale",
+              from: "0 0 0",
+              to: "1 1 1",
+              dur: 700,
+              easing: "easeOutElastic"
+            }
+          );
+
+
+          /*
+          Video sound
+          */
+
+          video.muted = false;
+
+
+          /*
+          Play video
+          */
+
+          try {
+
+            await video.play();
+
+            console.log(
+              "VIDEO PLAYING"
+            );
+
+          } catch (error) {
+
+            console.error(
+              "VIDEO PLAY ERROR:",
+              error
+            );
+
+          }
+
+        }
+      );
+
+
+      /*
+      ==========================================
+      TARGET LOST
+      ==========================================
+      */
+
+      target.addEventListener(
+        "targetLost",
+        function () {
+
+          console.log(
+            "TARGET LOST"
+          );
+
+
+          status.textContent =
+            "Point your camera at the card";
+
+
+          /*
+          Pause video
+          */
 
           video.pause();
 
-          console.log("VIDEO READY");
-        } catch (error) {
-          console.log("Video preparation:", error);
+
+          /*
+          Hide stage
+          */
+
+          stage.setAttribute(
+            "animation__hide",
+            {
+              property: "scale",
+              from: "1 1 1",
+              to: "0 0 0",
+              dur: 400,
+              easing: "easeInQuad"
+            }
+          );
+
         }
-      });
+      );
 
-      /*
-================================================
-TARGET FOUND
-================================================
-*/
-
-      target.addEventListener("targetFound", async function () {
-        console.log("TARGET FOUND");
-
-        status.textContent = "✓ AR detected";
-
-        video.muted = false;
-
-        try {
-          await video.play();
-
-          console.log("VIDEO PLAYING");
-        } catch (error) {
-          console.error("VIDEO PLAY ERROR:", error);
-        }
-      });
-
-      /*
-================================================
-TARGET LOST
-================================================
-*/
-
-      target.addEventListener("targetLost", function () {
-        console.log("TARGET LOST");
-
-        status.textContent = "Point your camera at the card";
-
-        video.pause();
-      });
     </script>
+
   </body>
 </html>
