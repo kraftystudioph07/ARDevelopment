@@ -1,118 +1,169 @@
 <html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-  </head>
+  <style>
+    #playVideo {
+      position: fixed;
+      z-index: 9999;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
 
-  <body>
+      padding: 15px 25px;
+      border: 0;
+      border-radius: 30px;
 
-    <a-scene
-      mindar-image="imageTargetSrc: https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.mind;"
-      color-space="sRGB"
-      renderer="colorManagement: true, physicallyCorrectLights"
-      vr-mode-ui="enabled: false"
-      device-orientation-permission-ui="enabled: false"
-    >
+      background: white;
+      color: black;
 
-      <a-assets>
+      font-size: 16px;
+    }
+  </style>
+</head>
 
-        <!-- Target image -->
-        <img
-          id="card"
-          src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.png"
-        />
+<body>
 
-        <!-- Video -->
-        <video
-          id="arVideo"
-          src="video.mp4"
-          loop
-          muted
-          playsinline
-          webkit-playsinline
-          crossorigin="anonymous"
-        ></video>
+<button id="playVideo">
+  Start Video
+</button>
 
-      </a-assets>
+<a-scene
+  mindar-image="imageTargetSrc: https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.mind;"
+  color-space="sRGB"
+  renderer="colorManagement: true, physicallyCorrectLights"
+  vr-mode-ui="enabled: false"
+  device-orientation-permission-ui="enabled: false"
+>
 
+  <a-assets>
 
-      <a-camera
-        position="0 0 0"
-        look-controls="enabled: false"
-      ></a-camera>
+    <video
+      id="arVideo"
+      src="video.mp4"
+      loop
+      muted
+      playsinline
+      webkit-playsinline
+      preload="auto"
+    ></video>
 
+  </a-assets>
 
-      <a-entity
-        mindar-image-target="targetIndex: 0"
-      >
+  <a-camera
+    position="0 0 0"
+    look-controls="enabled: false"
+  ></a-camera>
 
-        <!-- Card -->
-        <a-plane
-          src="#card"
-          position="0 0 0"
-          height="0.552"
-          width="1"
-          rotation="0 0 0"
-        ></a-plane>
+  <a-entity
+    id="target"
+    mindar-image-target="targetIndex: 0"
+  >
 
+    <a-video
+      src="#arVideo"
+      position="0 0 0.1"
+      width="1"
+      height="0.5625"
+    ></a-video>
 
-        <!-- VIDEO -->
-        <a-video
-          src="#arVideo"
-          position="0 0 0.1"
-          width="1"
-          height="0.5625"
-        ></a-video>
+  </a-entity>
 
-      </a-entity>
+</a-scene>
 
-    </a-scene>
+<script>
 
+const video =
+  document.getElementById("arVideo");
 
-    <script>
+const target =
+  document.getElementById("target");
 
-      const target =
-        document.querySelector(
-          '[mindar-image-target]'
-        );
-
-      const video =
-        document.querySelector(
-          '#arVideo'
-        );
+const playButton =
+  document.getElementById("playVideo");
 
 
-      target.addEventListener(
-        'targetFound',
-        () => {
+/* 
+   USER INTERACTION
+   This unlocks video playback.
+*/
 
-          console.log(
-            'Target found'
-          );
+playButton.addEventListener("click", async () => {
 
-          video.play();
+  try {
 
-        }
+    await video.play();
+
+    console.log("Video playing");
+
+    playButton.style.display = "none";
+
+  } catch (error) {
+
+    console.error(
+      "Video failed:",
+      error
+    );
+
+  }
+
+});
+
+
+/*
+   AR TARGET FOUND
+*/
+
+target.addEventListener(
+  "targetFound",
+  async () => {
+
+    console.log(
+      "TARGET FOUND"
+    );
+
+    try {
+
+      await video.play();
+
+      console.log(
+        "AR VIDEO PLAYING"
       );
 
+    } catch (error) {
 
-      target.addEventListener(
-        'targetLost',
-        () => {
-
-          console.log(
-            'Target lost'
-          );
-
-          video.pause();
-
-        }
+      console.error(
+        "AR VIDEO PLAY ERROR:",
+        error
       );
 
-    </script>
+    }
 
-  </body>
+  }
+);
+
+
+/*
+   AR TARGET LOST
+*/
+
+target.addEventListener(
+  "targetLost",
+  () => {
+
+    console.log(
+      "TARGET LOST"
+    );
+
+    video.pause();
+
+  }
+);
+
+</script>
+
+</body>
 </html>
