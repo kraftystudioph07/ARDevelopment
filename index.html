@@ -18,13 +18,117 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
+      background: #000;
     }
 
-    #soundButton {
+    /* START SCREEN */
+
+    #startScreen {
       position: fixed;
+      z-index: 10000;
+
+      inset: 0;
+
+      display: flex;
+      flex-direction: column;
+
+      justify-content: center;
+      align-items: center;
+
+      background: #000;
+
+      color: #fff;
+
+      font-family: Arial, sans-serif;
+
+      text-align: center;
+
+      padding: 30px;
+    }
+
+    #startScreen h1 {
+      margin: 0 0 10px;
+      font-size: 28px;
+    }
+
+    #startScreen p {
+      max-width: 320px;
+
+      margin: 0 0 25px;
+
+      line-height: 1.5;
+
+      opacity: 0.75;
+    }
+
+    #startButton {
+
+      padding: 16px 35px;
+
+      border: none;
+
+      border-radius: 50px;
+
+      background: #fff;
+
+      color: #000;
+
+      font-size: 17px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+
+    }
+
+    #startButton:active {
+      transform: scale(0.97);
+    }
+
+
+    /* STATUS */
+
+    #status {
+
+      position: fixed;
+
+      z-index: 9999;
+
+      top: 20px;
+
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      padding: 10px 18px;
+
+      border-radius: 30px;
+
+      background: rgba(0, 0, 0, 0.7);
+
+      color: #fff;
+
+      font-family: Arial, sans-serif;
+
+      font-size: 14px;
+
+      display: none;
+
+      white-space: nowrap;
+
+    }
+
+
+    /* SOUND BUTTON */
+
+    #soundButton {
+
+      position: fixed;
+
       z-index: 9999;
 
       bottom: 30px;
+
       left: 50%;
 
       transform: translateX(-50%);
@@ -32,17 +136,19 @@
       padding: 14px 22px;
 
       border: none;
+
       border-radius: 30px;
 
       background: rgba(0, 0, 0, 0.75);
-      color: white;
 
-      font-size: 16px;
-      font-weight: 600;
+      color: #fff;
+
+      font-size: 15px;
 
       cursor: pointer;
 
       display: none;
+
     }
 
   </style>
@@ -53,258 +159,416 @@
 <body>
 
 
-  <!-- SOUND BUTTON -->
+<!-- START SCREEN -->
 
-  <button id="soundButton">
-    🔇 Tap for Sound
+<div id="startScreen">
+
+  <h1>✨ AR Experience</h1>
+
+  <p>
+    Tap Start AR and point your camera
+    at the card to reveal the video.
+  </p>
+
+  <button id="startButton">
+    Start AR
   </button>
 
+</div>
 
-  <a-scene
 
-    mindar-image="
-      imageTargetSrc: https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.mind;
-    "
+<!-- STATUS -->
 
-    color-space="sRGB"
+<div id="status">
+  Point your camera at the card
+</div>
 
-    renderer="
-      colorManagement: true,
-      physicallyCorrectLights
-    "
 
-    vr-mode-ui="enabled: false"
+<!-- SOUND -->
 
-    device-orientation-permission-ui="
-      enabled: false
+<button id="soundButton">
+  🔇 Tap for Sound
+</button>
+
+
+<!-- AR -->
+
+<a-scene
+
+  mindar-image="
+    imageTargetSrc: https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.mind;
+    autoStart: false;
+  "
+
+  color-space="sRGB"
+
+  renderer="
+    colorManagement: true,
+    physicallyCorrectLights
+  "
+
+  vr-mode-ui="enabled: false"
+
+  device-orientation-permission-ui="
+    enabled: false
+  "
+
+>
+
+
+  <a-assets>
+
+    <!-- VIDEO -->
+
+    <video
+
+      id="arVideo"
+
+      src="video.mp4"
+
+      muted
+
+      playsinline
+
+      webkit-playsinline
+
+      loop
+
+      preload="auto"
+
+    ></video>
+
+  </a-assets>
+
+
+  <!-- CAMERA -->
+
+  <a-camera
+
+    position="0 0 0"
+
+    look-controls="enabled: false"
+
+  ></a-camera>
+
+
+  <!-- TARGET -->
+
+  <a-entity
+
+    id="target"
+
+    mindar-image-target="
+      targetIndex: 0
     "
 
   >
 
 
-    <a-assets>
+    <!-- VIDEO -->
 
+    <a-video
 
-      <!-- VIDEO -->
+      src="#arVideo"
 
-      <video
+      position="0 0 0.1"
 
-        id="arVideo"
+      width="1"
 
-        src="video.mp4"
+      height="0.5625"
 
-        autoplay
-
-        muted
-
-        loop
-
-        playsinline
-
-        webkit-playsinline
-
-        preload="auto"
-
-      ></video>
-
-
-    </a-assets>
-
-
-    <!-- CAMERA -->
-
-    <a-camera
-
-      position="0 0 0"
-
-      look-controls="enabled: false"
-
-    ></a-camera>
-
-
-    <!-- IMAGE TARGET -->
-
-    <a-entity
-
-      id="target"
-
-      mindar-image-target="
-        targetIndex: 0
+      material="
+        shader: flat;
+        side: double;
       "
 
-    >
+    ></a-video>
 
 
-      <!-- VIDEO -->
-
-      <a-video
-
-        src="#arVideo"
-
-        position="0 0 0.1"
-
-        width="1"
-
-        height="0.5625"
-
-        material="
-          shader: flat;
-          side: double;
-        "
-
-      ></a-video>
+  </a-entity>
 
 
-    </a-entity>
+</a-scene>
 
 
-  </a-scene>
+<script>
 
 
-  <script>
+const scene =
+  document.querySelector("a-scene");
 
 
-    const video =
-      document.getElementById(
-        "arVideo"
+const target =
+  document.getElementById("target");
+
+
+const video =
+  document.getElementById("arVideo");
+
+
+const startScreen =
+  document.getElementById("startScreen");
+
+
+const startButton =
+  document.getElementById("startButton");
+
+
+const status =
+  document.getElementById("status");
+
+
+const soundButton =
+  document.getElementById("soundButton");
+
+
+let arStarted = false;
+
+
+/*
+ * START AR
+ */
+
+startButton.addEventListener(
+  "click",
+  async function () {
+
+    try {
+
+      /*
+       * User interaction has
+       * happened here.
+       *
+       * This allows us to
+       * prepare video playback.
+       */
+
+      video.muted = true;
+
+      /*
+       * Load the video.
+       */
+
+      video.load();
+
+
+      /*
+       * Start muted video.
+       *
+       * This unlocks playback
+       * on many mobile browsers.
+       */
+
+      try {
+
+        await video.play();
+
+      } catch (error) {
+
+        console.log(
+          "Initial video play:",
+          error
+        );
+
+      }
+
+
+      /*
+       * Start MindAR
+       */
+
+      const arSystem =
+        scene.systems[
+          "mindar-image-system"
+        ];
+
+
+      await arSystem.start();
+
+
+      arStarted = true;
+
+
+      /*
+       * Hide start screen
+       */
+
+      startScreen.style.display =
+        "none";
+
+
+      /*
+       * Show status
+       */
+
+      status.style.display =
+        "block";
+
+      status.textContent =
+        "Point your camera at the card";
+
+
+      console.log(
+        "AR STARTED"
       );
 
 
-    const target =
-      document.getElementById(
-        "target"
+    } catch (error) {
+
+      console.error(
+        "AR START ERROR:",
+        error
       );
 
 
-    const soundButton =
-      document.getElementById(
-        "soundButton"
-      );
+      status.style.display =
+        "block";
+
+      status.textContent =
+        "Unable to start AR";
+
+
+    }
+
+  }
+);
+
+
+/*
+ * TARGET FOUND
+ */
+
+target.addEventListener(
+  "targetFound",
+  async function () {
+
+    console.log(
+      "TARGET FOUND"
+    );
+
+
+    status.textContent =
+      "✓ AR detected";
 
 
     /*
-     * TARGET FOUND
+     * Keep video muted for
+     * automatic playback.
      */
 
-    target.addEventListener(
-      "targetFound",
-      async function () {
-
-        console.log(
-          "TARGET FOUND"
-        );
+    video.muted = true;
 
 
-        /*
-         * Show sound button
-         */
+    /*
+     * Play video automatically.
+     */
 
-        soundButton.style.display =
-          "block";
+    try {
+
+      await video.play();
+
+      console.log(
+        "VIDEO PLAYING"
+      );
+
+    } catch (error) {
+
+      console.error(
+        "VIDEO PLAY ERROR:",
+        error
+      );
+
+    }
 
 
-        /*
-         * Make sure video
-         * starts from the beginning
-         */
+    /*
+     * Show sound button.
+     */
 
-        video.currentTime = 0;
+    soundButton.style.display =
+      "block";
+
+  }
+);
 
 
-        /*
-         * Autoplay muted
-         */
+/*
+ * TARGET LOST
+ */
+
+target.addEventListener(
+  "targetLost",
+  function () {
+
+    console.log(
+      "TARGET LOST"
+    );
+
+
+    status.textContent =
+      "Point your camera at the card";
+
+
+    /*
+     * Pause video.
+     */
+
+    video.pause();
+
+
+    /*
+     * Hide sound button.
+     */
+
+    soundButton.style.display =
+      "none";
+
+  }
+);
+
+
+/*
+ * SOUND BUTTON
+ */
+
+soundButton.addEventListener(
+  "click",
+  async function () {
+
+    try {
+
+      if (video.muted) {
+
+        video.muted = false;
+
+        await video.play();
+
+        soundButton.textContent =
+          "🔊 Sound On";
+
+      } else {
 
         video.muted = true;
 
-
-        try {
-
-          await video.play();
-
-          console.log(
-            "VIDEO AUTOPLAY STARTED"
-          );
-
-        } catch (error) {
-
-          console.log(
-            "Autoplay blocked:",
-            error
-          );
-
-        }
+        soundButton.textContent =
+          "🔇 Tap for Sound";
 
       }
-    );
+
+    } catch (error) {
+
+      console.error(
+        "Sound error:",
+        error
+      );
+
+    }
+
+  }
+);
 
 
-    /*
-     * TARGET LOST
-     */
-
-    target.addEventListener(
-      "targetLost",
-      function () {
-
-        console.log(
-          "TARGET LOST"
-        );
-
-
-        video.pause();
-
-
-        soundButton.style.display =
-          "none";
-
-      }
-    );
-
-
-    /*
-     * SOUND BUTTON
-     */
-
-    soundButton.addEventListener(
-      "click",
-      async function () {
-
-        try {
-
-          if (video.muted) {
-
-            video.muted = false;
-
-            await video.play();
-
-            soundButton.textContent =
-              "🔊 Sound On";
-
-          } else {
-
-            video.muted = true;
-
-            soundButton.textContent =
-              "🔇 Tap for Sound";
-
-          }
-
-        } catch (error) {
-
-          console.error(
-            "Sound error:",
-            error
-          );
-
-        }
-
-      }
-    );
-
-
-  </script>
-
+</script>
 
 </body>
 
