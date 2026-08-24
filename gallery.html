@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Polaroid Card Stack</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: #e8e3dc;
+
+        font-family: Arial, sans-serif;
+      }
+
+      /* =========================
+   GALLERY
+========================= */
+
+      .gallery {
+        width: min(90vw, 390px);
+      }
+
+      /* =========================
+   STACK
+========================= */
+
+      .stack {
+        position: relative;
+
+        width: 100%;
+        aspect-ratio: 0.82;
+
+        perspective: 1200px;
+
+        touch-action: pan-y;
+      }
+
+      /* =========================
+   POLAROID CARD
+========================= */
+
+      .card {
+        position: absolute;
+
+        inset: 0;
+
+        padding: 14px;
+        padding-bottom: 58px;
+
+        background: #fff;
+
+        border-radius: 2px;
+
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.18);
+
+        transform-style: preserve-3d;
+
+        transition:
+          transform 0.65s cubic-bezier(0.2, 0.8, 0.2, 1),
+          opacity 0.65s ease;
+
+        will-change: transform;
+      }
+
+      /* =========================
+   PHOTO
+========================= */
+
+      .card img {
+        width: 100%;
+        height: 100%;
+
+        display: block;
+
+        object-fit: cover;
+
+        pointer-events: none;
+      }
+
+      /* =========================
+   POLAROID CAPTION
+========================= */
+
+      .card::before {
+        content: "Krafty Studio";
+
+        position: absolute;
+
+        left: 0;
+        right: 0;
+
+        bottom: 17px;
+
+        text-align: center;
+
+        font-family: "Comic Sans MS", cursive;
+
+        font-size: 15px;
+
+        color: #333;
+
+        opacity: 0.75;
+      }
+
+      /* =========================
+   STACK POSITIONS
+========================= */
+
+      .card[data-position="0"] {
+        z-index: 5;
+
+        transform: rotate(-2deg);
+      }
+
+      .card[data-position="1"] {
+        z-index: 4;
+
+        transform: translateY(13px) scale(0.96) rotate(3deg);
+      }
+
+      .card[data-position="2"] {
+        z-index: 3;
+
+        transform: translateY(26px) scale(0.92) rotate(-4deg);
+      }
+
+      .card[data-position="3"] {
+        z-index: 2;
+
+        transform: translateY(39px) scale(0.88) rotate(5deg);
+      }
+
+      /* =========================
+   RIGHT MOVEMENT
+========================= */
+
+      .card.go-right {
+        transform: translateX(130%) translateY(-25px) rotate(20deg)
+          rotateY(20deg) scale(0.9);
+
+        opacity: 0;
+      }
+
+      /* =========================
+   LEFT MOVEMENT
+========================= */
+
+      .card.come-left {
+        transform: translateX(-130%) translateY(-25px) rotate(-20deg)
+          rotateY(-20deg) scale(0.9);
+
+        opacity: 0;
+      }
+
+      /* =========================
+   CONTROLS
+========================= */
+
+      .controls {
+        display: flex;
+
+        justify-content: center;
+
+        gap: 15px;
+
+        margin-top: 38px;
+      }
+
+      button {
+        width: 52px;
+        height: 52px;
+
+        border: none;
+
+        border-radius: 50%;
+
+        background: #fff;
+
+        color: #333;
+
+        font-size: 21px;
+
+        cursor: pointer;
+
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+
+        transition: transform 0.2s ease;
+      }
+
+      button:hover {
+        transform: scale(1.08);
+      }
+
+      button:active {
+        transform: scale(0.94);
+      }
+
+      /* =========================
+   MOBILE
+========================= */
+
+      @media (max-width: 480px) {
+        .gallery {
+          width: 82vw;
+        }
+
+        .card {
+          padding: 10px;
+          padding-bottom: 50px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="gallery">
+      <div class="stack" id="stack">
+        <!-- POLAROID 1 -->
+
+        <div class="card">
+          <img
+            src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&q=80"
+            alt="Polaroid photo 1"
+          />
+        </div>
+
+        <!-- POLAROID 2 -->
+
+        <div class="card">
+          <img
+            src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1000&q=80"
+            alt="Polaroid photo 2"
+          />
+        </div>
+
+        <!-- POLAROID 3 -->
+
+        <div class="card">
+          <img
+            src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1000&q=80"
+            alt="Polaroid photo 3"
+          />
+        </div>
+
+        <!-- POLAROID 4 -->
+
+        <div class="card">
+          <img
+            src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1000&q=80"
+            alt="Polaroid photo 4"
+          />
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="leftButton">←</button>
+
+        <button id="rightButton">→</button>
+      </div>
+    </div>
+
+    <script>
+      const stack = document.getElementById("stack");
+
+      const leftButton = document.getElementById("leftButton");
+
+      const rightButton = document.getElementById("rightButton");
+
+      let cards = Array.from(stack.querySelectorAll(".card"));
+
+      let animating = false;
+
+      /* =====================================
+   UPDATE STACK
+===================================== */
+
+      function updateStack() {
+        cards.forEach((card, index) => {
+          const position = Math.min(index, 3);
+
+          card.dataset.position = position;
+
+          card.style.zIndex = cards.length - index;
+
+          card.style.opacity = index < 4 ? "1" : "0";
+        });
+      }
+
+      /* =====================================
+   RIGHT
+   FRONT → BACK
+===================================== */
+
+      function moveRight() {
+        if (animating) return;
+
+        animating = true;
+
+        const front = cards[0];
+
+        front.classList.add("go-right");
+
+        setTimeout(() => {
+          front.classList.remove("go-right");
+
+          stack.appendChild(front);
+
+          cards = Array.from(stack.querySelectorAll(".card"));
+
+          updateStack();
+
+          animating = false;
+        }, 650);
+      }
+
+      /* =====================================
+   LEFT
+   BACK → FRONT
+===================================== */
+
+      function moveLeft() {
+        if (animating) return;
+
+        animating = true;
+
+        const back = cards[cards.length - 1];
+
+        /*
+       Start the card
+       outside the left
+    */
+
+        back.classList.add("come-left");
+
+        setTimeout(() => {
+          stack.insertBefore(back, cards[0]);
+
+          cards = Array.from(stack.querySelectorAll(".card"));
+
+          back.classList.remove("come-left");
+
+          updateStack();
+
+          animating = false;
+        }, 650);
+      }
+
+      /* =====================================
+   BUTTONS
+===================================== */
+
+      rightButton.addEventListener("click", moveRight);
+
+      leftButton.addEventListener("click", moveLeft);
+
+      /* =====================================
+   SWIPE
+===================================== */
+
+      let startX = 0;
+      let startY = 0;
+
+      stack.addEventListener("pointerdown", (event) => {
+        startX = event.clientX;
+
+        startY = event.clientY;
+      });
+
+      stack.addEventListener("pointerup", (event) => {
+        const dx = event.clientX - startX;
+
+        const dy = event.clientY - startY;
+
+        if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy)) {
+          return;
+        }
+
+        if (dx > 0) {
+          moveRight();
+        } else {
+          moveLeft();
+        }
+      });
+
+      /* =====================================
+   INITIALIZE
+===================================== */
+
+      updateStack();
+    </script>
+  </body>
+</html>
