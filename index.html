@@ -25,32 +25,43 @@
 
       #arPage {
         position: fixed;
+
         inset: 0;
+
         z-index: 9999;
 
         display: flex;
+
         flex-direction: column;
+
         justify-content: center;
+
         align-items: center;
 
         padding: 30px;
 
         background: #111;
+
         color: white;
 
         text-align: center;
+
         font-family: Arial, sans-serif;
       }
 
       #arPage h1 {
         margin: 0 0 10px;
+
         font-size: 30px;
       }
 
       #arPage p {
         max-width: 320px;
+
         margin: 0 0 25px;
+
         line-height: 1.5;
+
         opacity: 0.75;
       }
 
@@ -58,12 +69,15 @@
         padding: 16px 35px;
 
         border: none;
+
         border-radius: 50px;
 
         background: white;
+
         color: black;
 
         font-size: 17px;
+
         font-weight: bold;
 
         cursor: pointer;
@@ -77,9 +91,11 @@
 
       #status {
         position: fixed;
+
         z-index: 9998;
 
         top: 20px;
+
         left: 50%;
 
         transform: translateX(-50%);
@@ -93,6 +109,7 @@
         color: white;
 
         font-family: Arial, sans-serif;
+
         font-size: 14px;
 
         display: none;
@@ -101,38 +118,27 @@
   </head>
 
   <body>
-
     <!--
     ================================================
-    AR LANDING PAGE
+    AR PAGE
     ================================================
     -->
 
     <div id="arPage">
-
       <h1>✨ AR Experience</h1>
 
-      <p>
-        Tap Start AR, then point your camera at the card.
-      </p>
+      <p>Tap Start AR, then point your camera at the card.</p>
 
-      <button id="startAR">
-        Start AR
-      </button>
-
+      <button id="startAR">Start AR</button>
     </div>
-
 
     <!-- STATUS -->
 
-    <div id="status">
-      Point your camera at the card
-    </div>
-
+    <div id="status">Point your camera at the card</div>
 
     <!--
     ================================================
-    MINDAR + A-FRAME
+    MINDAR
     ================================================
     -->
 
@@ -143,15 +149,7 @@
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false"
     >
-
-      <!--
-      ==============================================
-      ASSETS
-      ==============================================
-      -->
-
       <a-assets>
-
         <video
           id="arVideo"
           src="video.mp4"
@@ -159,474 +157,301 @@
           playsinline
           webkit-playsinline
           preload="auto"
+          crossorigin="anonymous"
         ></video>
-
       </a-assets>
 
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <!--
-      ==============================================
-      CAMERA
-      ==============================================
-      -->
-
-      <a-camera
-        position="0 0 0"
-        look-controls="enabled: false"
-      ></a-camera>
-
-
-      <!--
-      ==============================================
-      IMAGE TARGET
-      ==============================================
-      -->
-
-      <a-entity
-        id="target"
-        mindar-image-target="targetIndex: 0"
-      >
-
-
-        <!--
-        ============================================
-        AR CONTENT CONTAINER
-        ============================================
-        -->
-
-        <a-entity
-          id="arObject"
-          position="0 0 0"
-        >
-
-
-          <!--
-          ==========================================
-          BASE
-          ==========================================
-          -->
-
-          <a-box
-            id="base"
-            position="0 0.04 0"
-            width="1"
-            height="0.08"
-            depth="0.65"
-            color="#eeeeee"
-          ></a-box>
-
-
-          <!-- BASE TOP -->
-
-          <a-box
-            position="0 0.085 0"
-            width="0.92"
-            height="0.025"
-            depth="0.58"
-            color="#ffffff"
-          ></a-box>
-
-
-          <!--
-          ==========================================
-          PRODUCT / VIDEO
-          ==========================================
-          
-          The bottom of the video starts
-          just above the base.
-
-          Y controls HEIGHT.
-          Z controls DEPTH.
-          ==========================================
-          -->
-
-          <a-entity
-            id="product"
-            position="0 0.08 0.05"
-            rotation="0 0 0"
-            scale="1 1 1"
-          >
-
-            <a-video
-              id="videoPlane"
-              src="#arVideo"
-
-              position="0 0.30 0"
-
-              width="0.65"
-              height="0.90"
-
-              material="
-                shader: flat;
-                side: double;
-              "
-            ></a-video>
-
-
-            <!--
-            ========================================
-            LEFT SUPPORT
-            ========================================
-            -->
-
-            <a-box
-              position="-0.36 0.30 -0.02"
-              width="0.025"
-              height="0.95"
-              depth="0.025"
-              color="#db4a2b"
-            ></a-box>
-
-
-            <!--
-            ========================================
-            RIGHT SUPPORT
-            ========================================
-            -->
-
-            <a-box
-              position="0.36 0.30 -0.02"
-              width="0.025"
-              height="0.95"
-              depth="0.025"
-              color="#db4a2b"
-            ></a-box>
-
-
-            <!--
-            ========================================
-            TOP SUPPORT
-            ========================================
-            -->
-
-            <a-box
-              position="0 0.79 -0.02"
-              width="0.75"
-              height="0.025"
-              depth="0.025"
-              color="#db4a2b"
-            ></a-box>
-
-
-          </a-entity>
-
-
-          <!--
-          ==========================================
-          LIGHT
-          ==========================================
-          -->
-
-          <a-light
-            type="ambient"
-            intensity="1.2"
-          ></a-light>
-
-
-          <a-light
-            type="point"
-            position="0 1.5 0.8"
-            intensity="2"
-            distance="4"
-          ></a-light>
-
-
-        </a-entity>
-
+      <a-entity id="target" mindar-image-target="targetIndex: 0">
+        <a-video
+          id="videoPlane"
+          src="#arVideo"
+          position="0 0 0.1"
+          width="1"
+          height="0.5625"
+        ></a-video>
       </a-entity>
-
     </a-scene>
 
-
     <script>
-
       /*
-      ==========================================
+      =================================================
       ELEMENTS
-      ==========================================
+      =================================================
       */
 
-      const arPage =
-        document.getElementById("arPage");
+      const arPage = document.getElementById("arPage");
 
-      const startAR =
-        document.getElementById("startAR");
+      const startAR = document.getElementById("startAR");
 
-      const status =
-        document.getElementById("status");
+      const status = document.getElementById("status");
 
-      const video =
-        document.getElementById("arVideo");
+      const video = document.getElementById("arVideo");
 
-      const target =
-        document.getElementById("target");
+      const target = document.getElementById("target");
 
-      const product =
-        document.getElementById("product");
-
+      const videoPlane = document.getElementById("videoPlane");
 
       /*
-      ==========================================
-      START AR
-      ==========================================
+      =================================================
+      STATE
+      =================================================
       */
 
-      startAR.addEventListener(
-        "click",
-        async function () {
+      let arStarted = false;
 
-          console.log("START AR BUTTON");
+      let targetVisible = false;
 
-          /*
+      /*
+      =================================================
+      START AR
+      =================================================
+      */
+
+      startAR.addEventListener("click", async function () {
+        console.log("START AR BUTTON");
+
+        /*
           Hide landing page
           */
 
-          arPage.style.display = "none";
+        arPage.style.display = "none";
 
-
-          /*
+        /*
           Show status
           */
 
-          status.style.display = "block";
+        status.style.display = "block";
 
-          status.textContent =
-            "Point your camera at the card";
+        status.textContent = "Point your camera at the card";
 
+        arStarted = true;
 
-          /*
-          Enable sound
+        /*
+          IMPORTANT:
+          Do NOT play then immediately pause
+          the video here.
+
+          That was one of the things that could
+          leave the WebGL video texture in a bad
+          state on the next target detection.
           */
 
-          video.muted = false;
+        video.muted = true;
 
+        video.pause();
 
-          /*
-          Prepare video
-          */
-
-          try {
-
-            await video.play();
-
-            video.pause();
-
-            console.log("VIDEO READY");
-
-          } catch (error) {
-
-            console.log(
-              "Video preparation:",
-              error
-            );
-
-          }
-
-        }
-      );
-
+        console.log("AR READY");
+      });
 
       /*
-      ==========================================
+      =================================================
+      WAIT FOR VIDEO
+      =================================================
+      */
+
+      function waitForVideo() {
+        return new Promise(function (resolve) {
+          /*
+          Video already has enough data
+          */
+
+          if (video.readyState >= 2) {
+            resolve();
+
+            return;
+          }
+
+          /*
+          Wait for video data
+          */
+
+          const loadedHandler = function () {
+            video.removeEventListener("loadeddata", loadedHandler);
+
+            resolve();
+          };
+
+          video.addEventListener("loadeddata", loadedHandler);
+        });
+      }
+
+      /*
+      =================================================
+      REFRESH A-FRAME VIDEO
+      =================================================
+      */
+
+      async function refreshVideo() {
+        console.log("Refreshing video...");
+
+        /*
+        Pause
+        */
+
+        video.pause();
+
+        /*
+        Reset playback position
+        */
+
+        try {
+          video.currentTime = 0;
+        } catch (error) {
+          console.log("Could not reset video:", error);
+        }
+
+        /*
+        Wait until video has data
+        */
+
+        await waitForVideo();
+
+        /*
+        Tell A-Frame to use the video
+        again as its material source.
+        */
+
+        videoPlane.setAttribute("src", "");
+
+        /*
+        Small delay allows A-Frame's
+        material to release the old
+        texture.
+        */
+
+        await new Promise(function (resolve) {
+          setTimeout(resolve, 50);
+        });
+
+        /*
+        Reconnect video
+        */
+
+        videoPlane.setAttribute("src", "#arVideo");
+
+        console.log("Video texture refreshed");
+      }
+
+      /*
+      =================================================
       TARGET FOUND
-      ==========================================
+      =================================================
       */
 
-      target.addEventListener(
-        "targetFound",
-        async function () {
+      target.addEventListener("targetFound", async function () {
+        console.log("TARGET FOUND");
 
-          console.log("TARGET FOUND");
+        targetVisible = true;
 
+        status.textContent = "✓ AR detected";
 
-          status.textContent =
-            "✓ AR detected";
+        if (!arStarted) {
+          return;
+        }
 
+        /*
+          Refresh the video every time
+          the target is detected.
 
-          /*
-          ========================================
-          RESET PRODUCT
-          ========================================
+          This is what fixes the white
+          video on the second detection.
           */
 
-          product.setAttribute(
-            "position",
-            "0 0.08 0.05"
-          );
-
-          product.setAttribute(
-            "rotation",
-            "0 0 0"
-          );
-
-          product.setAttribute(
-            "scale",
-            "0.15 0.15 0.15"
-          );
-
+        try {
+          await refreshVideo();
 
           /*
-          ========================================
-          PRODUCT RISES FROM BASE
-          ========================================
-          */
-
-          product.setAttribute(
-            "animation__rise",
-            {
-              property: "position",
-
-              from: "0 0.08 0.05",
-
-              to: "0 0.08 0.12",
-
-              dur: 900,
-
-              easing: "easeOutCubic"
-            }
-          );
-
-
-          /*
-          ========================================
-          PRODUCT GROWS
-          ========================================
-          */
-
-          product.setAttribute(
-            "animation__scale",
-            {
-              property: "scale",
-
-              from: "0.15 0.15 0.15",
-
-              to: "1 1 1",
-
-              dur: 900,
-
-              easing: "easeOutBack"
-            }
-          );
-
-
-          /*
-          ========================================
-          SLIGHT 3D TILT
-          ========================================
-          */
-
-          product.setAttribute(
-            "animation__tilt",
-            {
-              property: "rotation",
-
-              from: "0 0 0",
-
-              to: "-4 -5 0",
-
-              dur: 900,
-
-              easing: "easeOutCubic"
-            }
-          );
-
-
-          /*
-          ========================================
-          PLAY VIDEO
-          ========================================
-          */
+            =========================================
+            PLAY VIDEO
+            =========================================
+            */
 
           video.muted = false;
 
+          await video.play();
+
+          console.log("VIDEO PLAYING");
+        } catch (error) {
+          console.error("VIDEO PLAY ERROR:", error);
+
+          /*
+            =========================================
+            FALLBACK
+            =========================================
+
+            If the browser refuses sound,
+            play muted.
+            */
+
           try {
+            video.muted = true;
 
             await video.play();
 
-            console.log(
-              "VIDEO PLAYING"
-            );
-
-          } catch (error) {
-
-            console.error(
-              "VIDEO PLAY ERROR:",
-              error
-            );
-
+            console.log("VIDEO PLAYING MUTED");
+          } catch (fallbackError) {
+            console.error("VIDEO FALLBACK ERROR:", fallbackError);
           }
-
         }
-      );
-
+      });
 
       /*
-      ==========================================
+      =================================================
       TARGET LOST
-      ==========================================
+      =================================================
       */
 
-      target.addEventListener(
-        "targetLost",
-        function () {
+      target.addEventListener("targetLost", function () {
+        console.log("TARGET LOST");
 
-          console.log(
-            "TARGET LOST"
-          );
+        targetVisible = false;
 
+        status.textContent = "Point your camera at the card";
 
-          status.textContent =
-            "Point your camera at the card";
+        /*
+          Pause video.
 
+          IMPORTANT:
+          We do NOT call video.load()
+          or remove the source here.
 
-          /*
-          Pause video
+          MindAR continues tracking normally.
           */
 
-          video.pause();
+        video.pause();
 
+        console.log("VIDEO PAUSED");
+      });
 
-          /*
-          ========================================
-          PRODUCT GOES BACK INTO BASE
-          ========================================
-          */
+      /*
+      =================================================
+      VIDEO ERROR DEBUGGING
+      =================================================
+      */
 
-          product.setAttribute(
-            "animation__hide",
-            {
-              property: "scale",
+      video.addEventListener("error", function () {
+        console.error("VIDEO ERROR:", video.error);
+      });
 
-              from: "1 1 1",
+      /*
+      =================================================
+      VIDEO EVENTS
+      =================================================
+      */
 
-              to: "0.15 0.15 0.15",
+      video.addEventListener("loadeddata", function () {
+        console.log("VIDEO DATA LOADED");
+      });
 
-              dur: 450,
+      video.addEventListener("canplay", function () {
+        console.log("VIDEO CAN PLAY");
+      });
 
-              easing: "easeInCubic"
-            }
-          );
-
-
-          product.setAttribute(
-            "animation__hidePosition",
-            {
-              property: "position",
-
-              from: "0 0.08 0.12",
-
-              to: "0 0.08 0.05",
-
-              dur: 450,
-
-              easing: "easeInCubic"
-            }
-          );
-
-        }
-      );
-
+      video.addEventListener("playing", function () {
+        console.log("VIDEO PLAYING EVENT");
+      });
     </script>
-
   </body>
 </html>
