@@ -1,519 +1,109 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-
-  <style>
-
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #000;
-    }
-
-    /*
-     * START SCREEN
-     */
-
-    #startScreen {
-      position: fixed;
-      inset: 0;
-
-      z-index: 9999;
-
-      display: flex;
-      flex-direction: column;
-
-      justify-content: center;
-      align-items: center;
-
-      background: #000;
-
-      color: #fff;
-
-      font-family: Arial, sans-serif;
-
-      text-align: center;
-
-      padding: 30px;
-    }
-
-    #startScreen h1 {
-      margin: 0 0 12px;
-      font-size: 28px;
-    }
-
-    #startScreen p {
-      max-width: 320px;
-
-      margin: 0 0 25px;
-
-      line-height: 1.5;
-
-      opacity: 0.75;
-    }
-
-    /*
-     * START BUTTON
-     */
-
-    #startButton {
-      padding: 16px 35px;
-
-      border: none;
-
-      border-radius: 50px;
-
-      background: #fff;
-
-      color: #000;
-
-      font-size: 17px;
-
-      font-weight: bold;
-
-      cursor: pointer;
-
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    #startButton:active {
-      transform: scale(0.97);
-    }
-
-
-    /*
-     * STATUS
-     */
-
-    #status {
-      position: fixed;
-
-      z-index: 9998;
-
-      top: 20px;
-
-      left: 50%;
-
-      transform: translateX(-50%);
-
-      padding: 10px 18px;
-
-      border-radius: 30px;
-
-      background: rgba(0, 0, 0, 0.7);
-
-      color: #fff;
-
-      font-family: Arial, sans-serif;
-
-      font-size: 14px;
-
-      display: none;
-
-      white-space: nowrap;
-    }
-
-  </style>
-
-</head>
-
-
-<body>
-
-
-<!--
-==================================================
-START SCREEN
-==================================================
--->
-
-<div id="startScreen">
-
-  <h1>✨ AR Experience</h1>
-
-  <p>
-    Tap the button below, then point your
-    camera at the card to reveal the video.
-  </p>
-
-  <button id="startButton">
-    Start AR
-  </button>
-
-</div>
-
-
-<!--
-==================================================
-STATUS
-==================================================
--->
-
-<div id="status">
-  Point your camera at the card
-</div>
-
-
-<!--
-==================================================
-AR SCENE
-==================================================
--->
-
-<a-scene
-
-  mindar-image="
-    imageTargetSrc: https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.mind;
-  "
-
-  color-space="sRGB"
-
-  renderer="
-    colorManagement: true,
-    physicallyCorrectLights
-  "
-
-  vr-mode-ui="enabled: false"
-
-  device-orientation-permission-ui="
-    enabled: false
-  "
-
->
-
-
-  <!--
-  ==================================================
-  ASSETS
-  ==================================================
-  -->
-
-  <a-assets>
-
-    <video
-
-      id="arVideo"
-
-      src="video.mp4"
-
-      preload="auto"
-
-      loop
-
-      playsinline
-
-      webkit-playsinline
-
-    ></video>
-
-  </a-assets>
-
-
-  <!--
-  ==================================================
-  CAMERA
-  ==================================================
-  -->
-
-  <a-camera
-
-    position="0 0 0"
-
-    look-controls="enabled: false"
-
-  ></a-camera>
-
-
-  <!--
-  ==================================================
-  AR TARGET
-  ==================================================
-  -->
-
-  <a-entity
-
-    id="target"
-
-    mindar-image-target="
-      targetIndex: 0
-    "
-
-  >
-
-
-    <!--
-    ==================================================
-    VIDEO
-    ==================================================
-    -->
-
-    <a-video
-
-      src="#arVideo"
-
-      position="0 0 0.1"
-
-      width="1"
-
-      height="0.5625"
-
-      material="
-        shader: flat;
-        side: double;
-      "
-
-    ></a-video>
-
-
-  </a-entity>
-
-
-</a-scene>
-
-
-<script>
-
-
-/*
-==================================================
-ELEMENTS
-==================================================
-*/
-
-const startScreen =
-  document.getElementById(
-    "startScreen"
-  );
-
-
-const startButton =
-  document.getElementById(
-    "startButton"
-  );
-
-
-const status =
-  document.getElementById(
-    "status"
-  );
-
-
-const target =
-  document.getElementById(
-    "target"
-  );
-
-
-const video =
-  document.getElementById(
-    "arVideo"
-  );
-
-
-/*
-==================================================
-START AR
-==================================================
-
-The user must tap this button first.
-
-This gives the browser a user interaction
-before we attempt to play the video with sound.
-==================================================
-*/
-
-startButton.addEventListener(
-  "click",
-  async function () {
-
-    console.log(
-      "START AR BUTTON PRESSED"
-    );
-
-
-    /*
-     * Hide start screen
-     */
-
-    startScreen.style.display =
-      "none";
-
-
-    /*
-     * Show status
-     */
-
-    status.style.display =
-      "block";
-
-    status.textContent =
-      "Starting AR...";
-
-
-    /*
-     * IMPORTANT:
-     *
-     * Do NOT mute the video.
-     */
-
-    video.muted = false;
-
-
-    /*
-     * Prepare the video.
-     */
-
-    video.load();
-
-
-    /*
-     * Try playing the video immediately
-     * because this function was triggered
-     * by a user tap.
-     *
-     * The video will not yet be visible
-     * because it is attached to the AR target.
-     */
-
-    try {
-
-      await video.play();
-
-      console.log(
-        "VIDEO PLAYBACK UNLOCKED"
-      );
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+    <style>
+      #playVideo {
+        position: fixed;
+        z-index: 9999;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+
+        padding: 15px 25px;
+        border: 0;
+        border-radius: 30px;
+
+        background: white;
+        color: black;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <button id="playVideo">Start Video</button>
+
+    <a-scene
+      mindar-image="imageTargetSrc: https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.mind;"
+      color-space="sRGB"
+      renderer="colorManagement: true, physicallyCorrectLights"
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: false"
+    >
+      <a-assets>
+        <video
+          id="arVideo"
+          src="video.mp4"
+          loop
+          muted
+          playsinline
+          webkit-playsinline
+          preload="auto"
+        ></video>
+      </a-assets>
+
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <a-entity id="target" mindar-image-target="targetIndex: 0"
+        ><a-video
+          src="#arVideo"
+          position="0 0 0.1"
+          width="1"
+          height="0.5625"
+        ></a-video> </a-entity
+    ></a-scene>
+
+    <script>
+      const video = document.getElementById("arVideo");
+
+      const target = document.getElementById("target");
+
+      const playButton = document.getElementById("playVideo");
+
+      /* 
+   USER INTERACTION
+   This unlocks video playback.
+*/ playButton.addEventListener("click", async () => {
+        try {
+          await video.play();
+
+          console.log("Video playing");
+
+          playButton.style.display = "none";
+        } catch (error) {
+          console.error("Video failed:", error);
+        }
+      });
 
       /*
-       * Pause until the AR target
-       * is actually detected.
-       */
-
-      video.pause();
-
-    } catch (error) {
-
-      console.log(
-        "Browser blocked video playback:",
-        error
-      );
-
-    }
-
-
-    status.textContent =
-      "Point your camera at the card";
-
-  }
-);
-
-
-/*
-==================================================
-TARGET FOUND
-==================================================
+   AR TARGET FOUND
 */
 
-target.addEventListener(
-  "targetFound",
-  async function () {
+      target.addEventListener("targetFound", async () => {
+        console.log("TARGET FOUND");
 
-    console.log(
-      "TARGET FOUND"
-    );
+        try {
+          await video.play();
 
-
-    status.textContent =
-      "✓ AR detected";
-
-
-    /*
-     * Start from the beginning.
-     */
-
-    video.currentTime = 0;
-
-
-    /*
-     * Make sure sound is ON.
-     */
-
-    video.muted = false;
-
-
-    /*
-     * PLAY VIDEO
-     */
-
-    try {
-
-      await video.play();
-
-      console.log(
-        "VIDEO PLAYING WITH SOUND"
-      );
-
-    } catch (error) {
-
-      console.error(
-        "VIDEO PLAYBACK BLOCKED:",
-        error
-      );
+          console.log("AR VIDEO PLAYING");
+        } catch (error) {
+          console.error("AR VIDEO PLAY ERROR:", error);
+        }
+      });
 
       /*
-       * If the browser blocks audible
-       * playback, we don't automatically
-       * mute it because you specifically
-       * requested sound.
-       */
-
-    }
-
-  }
-);
-
-
-/*
-==================================================
-TARGET LOST
-==================================================
+   AR TARGET LOST
 */
 
-target.addEventListener(
-  "targetLost",
-  function () {
+      target.addEventListener("targetLost", () => {
+        console.log("TARGET LOST");
 
-    console.log(
-      "TARGET LOST"
-    );
-
-
-    status.textContent =
-      "Point your camera at the card";
-
-
-    /*
-     * Stop video when target disappears.
-     */
-
-    video.pause();
-
-  }
-);
-
-
-</script>
-
-</body>
-
+        video.pause();
+      });
+    </script>
+  </body>
 </html>
