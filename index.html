@@ -1,109 +1,313 @@
-<html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<!DOCTYPE html>
+<html lang="en">
 
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+<head>
 
-    <style>
-      #playVideo {
-        position: fixed;
-        z-index: 9999;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        padding: 15px 25px;
-        border: 0;
-        border-radius: 30px;
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 
-        background: white;
-        color: black;
-        font-size: 16px;
-      }
-    </style>
-  </head>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
-  <body>
-    <button id="playVideo">Start Video</button>
+  <style>
 
-    <a-scene
-      mindar-image="imageTargetSrc: https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.mind;"
-      color-space="sRGB"
-      renderer="colorManagement: true, physicallyCorrectLights"
-      vr-mode-ui="enabled: false"
-      device-orientation-permission-ui="enabled: false"
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    #playVideo {
+
+      position: fixed;
+
+      z-index: 9999;
+
+      bottom: 30px;
+
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      padding: 15px 25px;
+
+      border: 0;
+
+      border-radius: 30px;
+
+      background: white;
+
+      color: black;
+
+      font-size: 16px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- START BUTTON -->
+
+  <button id="playVideo">
+    Start AR
+  </button>
+
+
+  <a-scene
+
+    mindar-image="
+      imageTargetSrc: https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.mind;
+    "
+
+    color-space="sRGB"
+
+    renderer="
+      colorManagement: true,
+      physicallyCorrectLights
+    "
+
+    vr-mode-ui="enabled: false"
+
+    device-orientation-permission-ui="
+      enabled: false
+    "
+
+  >
+
+
+    <a-assets>
+
+      <!-- VIDEO -->
+
+      <video
+
+        id="arVideo"
+
+        src="video.mp4"
+
+        loop
+
+        playsinline
+
+        webkit-playsinline
+
+        preload="auto"
+
+      ></video>
+
+    </a-assets>
+
+
+    <!-- CAMERA -->
+
+    <a-camera
+
+      position="0 0 0"
+
+      look-controls="enabled: false"
+
+    ></a-camera>
+
+
+    <!-- AR TARGET -->
+
+    <a-entity
+
+      id="target"
+
+      mindar-image-target="
+        targetIndex: 0
+      "
+
     >
-      <a-assets>
-        <video
-          id="arVideo"
-          src="video.mp4"
-          loop
-          muted
-          playsinline
-          webkit-playsinline
-          preload="auto"
-        ></video>
-      </a-assets>
 
-      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+      <!-- AR VIDEO -->
 
-      <a-entity id="target" mindar-image-target="targetIndex: 0"
-        ><a-video
-          src="#arVideo"
-          position="0 0 0.1"
-          width="1"
-          height="0.5625"
-        ></a-video> </a-entity
-    ></a-scene>
+      <a-video
 
-    <script>
-      const video = document.getElementById("arVideo");
+        src="#arVideo"
 
-      const target = document.getElementById("target");
+        position="0 0 0.1"
 
-      const playButton = document.getElementById("playVideo");
+        width="1"
 
-      /* 
-   USER INTERACTION
-   This unlocks video playback.
-*/ playButton.addEventListener("click", async () => {
+        height="0.5625"
+
+      ></a-video>
+
+    </a-entity>
+
+
+  </a-scene>
+
+
+  <script>
+
+
+    const video =
+      document.getElementById(
+        "arVideo"
+      );
+
+
+    const target =
+      document.getElementById(
+        "target"
+      );
+
+
+    const playButton =
+      document.getElementById(
+        "playVideo"
+      );
+
+
+    /*
+    ============================================
+    START AR / VIDEO
+    ============================================
+    */
+
+    playButton.addEventListener(
+      "click",
+      async () => {
+
         try {
+
+          /*
+           * Make sure sound is enabled.
+           */
+
+          video.muted = false;
+
+
+          /*
+           * Start the video.
+           *
+           * Because this happens directly
+           * from the user's tap, the browser
+           * is much more likely to allow
+           * audio playback.
+           */
+
           await video.play();
 
-          console.log("Video playing");
 
-          playButton.style.display = "none";
+          console.log(
+            "VIDEO PLAYING WITH SOUND"
+          );
+
+
+          /*
+           * Hide button.
+           */
+
+          playButton.style.display =
+            "none";
+
+
         } catch (error) {
-          console.error("Video failed:", error);
+
+          console.error(
+            "Video failed:",
+            error
+          );
+
         }
-      });
 
-      /*
-   AR TARGET FOUND
-*/
+      }
+    );
 
-      target.addEventListener("targetFound", async () => {
-        console.log("TARGET FOUND");
+
+    /*
+    ============================================
+    AR TARGET FOUND
+    ============================================
+    */
+
+    target.addEventListener(
+      "targetFound",
+      async () => {
+
+        console.log(
+          "TARGET FOUND"
+        );
+
 
         try {
+
+          /*
+           * Keep sound enabled.
+           */
+
+          video.muted = false;
+
+
+          /*
+           * Start / resume video.
+           */
+
           await video.play();
 
-          console.log("AR VIDEO PLAYING");
+
+          console.log(
+            "AR VIDEO PLAYING"
+          );
+
+
         } catch (error) {
-          console.error("AR VIDEO PLAY ERROR:", error);
+
+          console.error(
+            "AR VIDEO PLAY ERROR:",
+            error
+          );
+
         }
-      });
 
-      /*
-   AR TARGET LOST
-*/
+      }
+    );
 
-      target.addEventListener("targetLost", () => {
-        console.log("TARGET LOST");
+
+    /*
+    ============================================
+    AR TARGET LOST
+    ============================================
+    */
+
+    target.addEventListener(
+      "targetLost",
+      () => {
+
+        console.log(
+          "TARGET LOST"
+        );
+
+
+        /*
+         * Pause video.
+         */
 
         video.pause();
-      });
-    </script>
-  </body>
+
+      }
+    );
+
+
+  </script>
+
+
+</body>
+
 </html>
