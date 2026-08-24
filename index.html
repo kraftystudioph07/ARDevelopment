@@ -1,32 +1,20 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>AR Experience</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
     <style>
-      * {
-        box-sizing: border-box;
-      }
-
       html,
       body {
         margin: 0;
         padding: 0;
-
         width: 100%;
         height: 100%;
-
         overflow: hidden;
-
-        font-family: Arial, sans-serif;
-
-        background: #111;
       }
 
       /*
@@ -40,7 +28,7 @@
 
         inset: 0;
 
-        z-index: 10000;
+        z-index: 9999;
 
         display: flex;
 
@@ -52,53 +40,33 @@
 
         padding: 30px;
 
-        text-align: center;
-
         background: #111;
 
         color: white;
-      }
 
-      #arPage .icon {
-        width: 90px;
+        text-align: center;
 
-        height: 90px;
-
-        display: flex;
-
-        align-items: center;
-
-        justify-content: center;
-
-        margin-bottom: 25px;
-
-        border-radius: 24px;
-
-        background: #222;
-
-        font-size: 42px;
+        font-family: Arial, sans-serif;
       }
 
       #arPage h1 {
-        margin: 0 0 12px;
+        margin: 0 0 10px;
 
         font-size: 30px;
       }
 
       #arPage p {
-        max-width: 340px;
+        max-width: 320px;
 
-        margin: 0 0 30px;
+        margin: 0 0 25px;
 
-        line-height: 1.6;
+        line-height: 1.5;
 
-        color: rgba(255, 255, 255, 0.7);
+        opacity: 0.75;
       }
 
       #startAR {
-        min-width: 180px;
-
-        padding: 16px 30px;
+        padding: 16px 35px;
 
         border: none;
 
@@ -106,7 +74,7 @@
 
         background: white;
 
-        color: #111;
+        color: black;
 
         font-size: 17px;
 
@@ -115,19 +83,13 @@
         cursor: pointer;
       }
 
-      #startAR:active {
-        transform: scale(0.97);
-      }
-
       /*
     ==========================================
-    INSTRUCTIONS
+    STATUS
     ==========================================
     */
 
-      #instructions {
-        display: none;
-
+      #status {
         position: fixed;
 
         z-index: 9998;
@@ -138,59 +100,19 @@
 
         transform: translateX(-50%);
 
-        width: calc(100% - 40px);
-
-        max-width: 400px;
-
-        padding: 13px 18px;
+        padding: 10px 18px;
 
         border-radius: 30px;
 
-        background: rgba(0, 0, 0, 0.75);
+        background: rgba(0, 0, 0, 0.7);
 
         color: white;
 
-        text-align: center;
+        font-family: Arial, sans-serif;
 
         font-size: 14px;
-      }
 
-      /*
-    ==========================================
-    LOADING
-    ==========================================
-    */
-
-      #loading {
         display: none;
-
-        position: fixed;
-
-        inset: 0;
-
-        z-index: 10001;
-
-        align-items: center;
-
-        justify-content: center;
-
-        background: #111;
-
-        color: white;
-
-        text-align: center;
-      }
-
-      /*
-    ==========================================
-    A-FRAME
-    ==========================================
-    */
-
-      a-scene {
-        width: 100%;
-
-        height: 100%;
       }
     </style>
   </head>
@@ -198,57 +120,35 @@
   <body>
     <!--
 ================================================
-AR LANDING PAGE
+AR PAGE
 ================================================
 -->
 
     <div id="arPage">
-      <div class="icon">✨</div>
+      <h1>✨ AR Experience</h1>
 
-      <h1>AR Experience</h1>
-
-      <p>
-        Bring your card to life. Tap the button below and point your camera at
-        the card.
-      </p>
+      <p>Tap Start AR, then point your camera at the card.</p>
 
       <button id="startAR">Start AR</button>
     </div>
 
-    <!--
-================================================
-AR INSTRUCTIONS
-================================================
--->
+    <!-- STATUS -->
 
-    <div id="instructions">Point your camera at the card</div>
+    <div id="status">Point your camera at the card</div>
 
     <!--
 ================================================
-AR SCENE
+YOUR ORIGINAL WORKING A-FRAME
 ================================================
 -->
 
     <a-scene
-      mindar-image="
-    imageTargetSrc: https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.mind;
-  "
+      mindar-image="imageTargetSrc: https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.mind;"
       color-space="sRGB"
-      renderer="
-    colorManagement: true,
-    physicallyCorrectLights
-  "
+      renderer="colorManagement: true, physicallyCorrectLights"
       vr-mode-ui="enabled: false"
-      device-orientation-permission-ui="
-    enabled: false
-  "
+      device-orientation-permission-ui="enabled: false"
     >
-      <!--
-  ==============================================
-  ASSETS
-  ==============================================
-  -->
-
       <a-assets>
         <video
           id="arVideo"
@@ -260,27 +160,9 @@ AR SCENE
         ></video>
       </a-assets>
 
-      <!--
-  ==============================================
-  CAMERA
-  ==============================================
-  -->
-
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <!--
-  ==============================================
-  IMAGE TARGET
-  ==============================================
-  -->
-
       <a-entity id="target" mindar-image-target="targetIndex: 0">
-        <!--
-    ============================================
-    VIDEO
-    ============================================
-    -->
-
         <a-video
           src="#arVideo"
           position="0 0 0.1"
@@ -301,11 +183,11 @@ ELEMENTS
 
       const startAR = document.getElementById("startAR");
 
-      const instructions = document.getElementById("instructions");
-
-      const target = document.getElementById("target");
+      const status = document.getElementById("status");
 
       const video = document.getElementById("arVideo");
+
+      const target = document.getElementById("target");
 
       /*
 ================================================
@@ -314,7 +196,17 @@ START AR
 */
 
       startAR.addEventListener("click", async function () {
-        console.log("START AR");
+        console.log("START AR BUTTON");
+
+        /*
+         * IMPORTANT:
+         *
+         * We are NOT starting MindAR
+         * manually.
+         *
+         * The original MindAR scene
+         * remains untouched.
+         */
 
         /*
          * Hide landing page
@@ -326,36 +218,23 @@ START AR
          * Show instructions
          */
 
-        instructions.style.display = "block";
+        status.style.display = "block";
+
+        status.textContent = "Point your camera at the card";
 
         /*
-         * Enable sound
+         * Enable video sound
          */
 
         video.muted = false;
 
         /*
-         * Load video
-         */
-
-        video.load();
-
-        /*
-         * The user has interacted with
-         * the page, so try to unlock
-         * video playback.
+         * Prepare video after
+         * user interaction.
          */
 
         try {
           await video.play();
-
-          /*
-           * Pause it again.
-           *
-           * This prepares the browser
-           * for playback when the AR
-           * target is detected.
-           */
 
           video.pause();
 
@@ -374,17 +253,9 @@ TARGET FOUND
       target.addEventListener("targetFound", async function () {
         console.log("TARGET FOUND");
 
-        instructions.textContent = "✓ AR detected";
-
-        /*
-         * Make sure sound is enabled
-         */
+        status.textContent = "✓ AR detected";
 
         video.muted = false;
-
-        /*
-         * Play video
-         */
 
         try {
           await video.play();
@@ -404,11 +275,7 @@ TARGET LOST
       target.addEventListener("targetLost", function () {
         console.log("TARGET LOST");
 
-        instructions.textContent = "Point your camera at the card";
-
-        /*
-         * Pause video
-         */
+        status.textContent = "Point your camera at the card";
 
         video.pause();
       });
