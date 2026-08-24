@@ -17,6 +17,12 @@
         overflow: hidden;
       }
 
+      /*
+      ==========================================
+      AR LANDING PAGE
+      ==========================================
+      */
+
       #arPage {
         position: fixed;
         inset: 0;
@@ -63,6 +69,12 @@
         cursor: pointer;
       }
 
+      /*
+      ==========================================
+      STATUS
+      ==========================================
+      */
+
       #status {
         position: fixed;
         z-index: 9998;
@@ -77,6 +89,7 @@
         border-radius: 30px;
 
         background: rgba(0, 0, 0, 0.7);
+
         color: white;
 
         font-family: Arial, sans-serif;
@@ -88,41 +101,57 @@
   </head>
 
   <body>
-    <!-- ========================================
-         AR LANDING PAGE
-    ========================================= -->
+
+    <!--
+    ================================================
+    AR LANDING PAGE
+    ================================================
+    -->
 
     <div id="arPage">
+
       <h1>✨ AR Experience</h1>
 
-      <p>Tap Start AR, then point your camera at the card.</p>
+      <p>
+        Tap Start AR, then point your camera at the card.
+      </p>
 
-      <button id="startAR">Start AR</button>
+      <button id="startAR">
+        Start AR
+      </button>
+
     </div>
+
 
     <!-- STATUS -->
 
-    <div id="status">Point your camera at the card</div>
+    <div id="status">
+      Point your camera at the card
+    </div>
 
-    <!-- ========================================
-         MINDAR
-    ========================================= -->
+
+    <!--
+    ================================================
+    MINDAR + A-FRAME
+    ================================================
+    -->
 
     <a-scene
-      mindar-image="
-        imageTargetSrc:
-        https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.mind;
-      "
+      mindar-image="imageTargetSrc: https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.mind;"
       color-space="sRGB"
       renderer="colorManagement: true, physicallyCorrectLights"
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false"
     >
-      <!-- ======================================
-           ASSETS
-      ======================================= -->
+
+      <!--
+      ==============================================
+      ASSETS
+      ==============================================
+      -->
 
       <a-assets>
+
         <video
           id="arVideo"
           src="video.mp4"
@@ -131,151 +160,210 @@
           webkit-playsinline
           preload="auto"
         ></video>
+
       </a-assets>
 
-      <!-- ======================================
-           CAMERA
-      ======================================= -->
 
-      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+      <!--
+      ==============================================
+      CAMERA
+      ==============================================
+      -->
 
-      <!-- ======================================
-           IMAGE TARGET
-      ======================================= -->
+      <a-camera
+        position="0 0 0"
+        look-controls="enabled: false"
+      ></a-camera>
 
-      <a-entity id="target" mindar-image-target="targetIndex: 0">
-        <!-- ====================================
-             3D POP-OUT CONTAINER
-        ===================================== -->
+
+      <!--
+      ==============================================
+      IMAGE TARGET
+      ==============================================
+      -->
+
+      <a-entity
+        id="target"
+        mindar-image-target="targetIndex: 0"
+      >
+
+
+        <!--
+        ============================================
+        AR CONTENT CONTAINER
+        ============================================
+        -->
 
         <a-entity
-          id="popout"
+          id="arObject"
           position="0 0 0"
-          rotation="0 0 0"
-          scale="0.15 0.15 0.15"
         >
-          <!-- ==================================
-               VIDEO SHADOW / BACK
-          =================================== -->
 
-          <a-plane
-            id="videoShadow"
-            position="0 0 -0.04"
-            width="1.08"
-            height="0.65"
-            rotation="0 0 0"
-            color="#000000"
-            opacity="0.35"
-          ></a-plane>
 
-          <!-- ==================================
-               VIDEO FRAME
-          =================================== -->
+          <!--
+          ==========================================
+          BASE
+          ==========================================
+          -->
 
           <a-box
-            position="0 0 0"
-            width="1.08"
-            height="0.65"
-            depth="0.06"
-            color="#111111"
-          ></a-box>
-
-          <!-- ==================================
-               VIDEO
-          =================================== -->
-
-          <a-video
-            id="videoPlane"
-            src="#arVideo"
-            position="0 0 0.04"
+            id="base"
+            position="0 0.04 0"
             width="1"
-            height="0.5625"
-            material="
-              shader: flat;
-              side: double;
-            "
-          ></a-video>
+            height="0.08"
+            depth="0.65"
+            color="#eeeeee"
+          ></a-box>
 
-          <!-- ==================================
-               TOP EDGE
-          =================================== -->
+
+          <!-- BASE TOP -->
 
           <a-box
-            position="0 0.325 0"
-            width="1.08"
+            position="0 0.085 0"
+            width="0.92"
             height="0.025"
-            depth="0.08"
-            color="#db4a2b"
+            depth="0.58"
+            color="#ffffff"
           ></a-box>
 
-          <!-- ==================================
-               BOTTOM EDGE
-          =================================== -->
 
-          <a-box
-            position="0 -0.325 0"
-            width="1.08"
-            height="0.025"
-            depth="0.08"
-            color="#db4a2b"
-          ></a-box>
+          <!--
+          ==========================================
+          PRODUCT / VIDEO
+          ==========================================
+          
+          The bottom of the video starts
+          just above the base.
 
-          <!-- ==================================
-               LEFT EDGE
-          =================================== -->
+          Y controls HEIGHT.
+          Z controls DEPTH.
+          ==========================================
+          -->
 
-          <a-box
-            position="-0.54 0 0"
-            width="0.025"
-            height="0.65"
-            depth="0.08"
-            color="#db4a2b"
-          ></a-box>
+          <a-entity
+            id="product"
+            position="0 0.08 0.05"
+            rotation="0 0 0"
+            scale="1 1 1"
+          >
 
-          <!-- ==================================
-               RIGHT EDGE
-          =================================== -->
+            <a-video
+              id="videoPlane"
+              src="#arVideo"
 
-          <a-box
-            position="0.54 0 0"
-            width="0.025"
-            height="0.65"
-            depth="0.08"
-            color="#db4a2b"
-          ></a-box>
+              position="0 0.30 0"
 
-          <!-- ==================================
-               LIGHT
-          =================================== -->
+              width="0.65"
+              height="0.90"
+
+              material="
+                shader: flat;
+                side: double;
+              "
+            ></a-video>
+
+
+            <!--
+            ========================================
+            LEFT SUPPORT
+            ========================================
+            -->
+
+            <a-box
+              position="-0.36 0.30 -0.02"
+              width="0.025"
+              height="0.95"
+              depth="0.025"
+              color="#db4a2b"
+            ></a-box>
+
+
+            <!--
+            ========================================
+            RIGHT SUPPORT
+            ========================================
+            -->
+
+            <a-box
+              position="0.36 0.30 -0.02"
+              width="0.025"
+              height="0.95"
+              depth="0.025"
+              color="#db4a2b"
+            ></a-box>
+
+
+            <!--
+            ========================================
+            TOP SUPPORT
+            ========================================
+            -->
+
+            <a-box
+              position="0 0.79 -0.02"
+              width="0.75"
+              height="0.025"
+              depth="0.025"
+              color="#db4a2b"
+            ></a-box>
+
+
+          </a-entity>
+
+
+          <!--
+          ==========================================
+          LIGHT
+          ==========================================
+          -->
+
+          <a-light
+            type="ambient"
+            intensity="1.2"
+          ></a-light>
+
 
           <a-light
             type="point"
-            position="0 0 0.5"
-            intensity="1.5"
-            distance="3"
+            position="0 1.5 0.8"
+            intensity="2"
+            distance="4"
           ></a-light>
+
+
         </a-entity>
+
       </a-entity>
+
     </a-scene>
 
+
     <script>
+
       /*
       ==========================================
       ELEMENTS
       ==========================================
       */
 
-      const arPage = document.getElementById("arPage");
+      const arPage =
+        document.getElementById("arPage");
 
-      const startAR = document.getElementById("startAR");
+      const startAR =
+        document.getElementById("startAR");
 
-      const status = document.getElementById("status");
+      const status =
+        document.getElementById("status");
 
-      const video = document.getElementById("arVideo");
+      const video =
+        document.getElementById("arVideo");
 
-      const target = document.getElementById("target");
+      const target =
+        document.getElementById("target");
 
-      const popout = document.getElementById("popout");
+      const product =
+        document.getElementById("product");
+
 
       /*
       ==========================================
@@ -283,31 +371,60 @@
       ==========================================
       */
 
-      startAR.addEventListener("click", async function () {
-        console.log("START AR BUTTON");
+      startAR.addEventListener(
+        "click",
+        async function () {
 
-        arPage.style.display = "none";
+          console.log("START AR BUTTON");
 
-        status.style.display = "block";
+          /*
+          Hide landing page
+          */
 
-        status.textContent = "Point your camera at the card";
+          arPage.style.display = "none";
 
-        video.muted = false;
 
-        /*
+          /*
+          Show status
+          */
+
+          status.style.display = "block";
+
+          status.textContent =
+            "Point your camera at the card";
+
+
+          /*
+          Enable sound
+          */
+
+          video.muted = false;
+
+
+          /*
           Prepare video
           */
 
-        try {
-          await video.play();
+          try {
 
-          video.pause();
+            await video.play();
 
-          console.log("VIDEO READY");
-        } catch (error) {
-          console.log("Video preparation:", error);
+            video.pause();
+
+            console.log("VIDEO READY");
+
+          } catch (error) {
+
+            console.log(
+              "Video preparation:",
+              error
+            );
+
+          }
+
         }
-      });
+      );
+
 
       /*
       ==========================================
@@ -315,91 +432,133 @@
       ==========================================
       */
 
-      target.addEventListener("targetFound", async function () {
-        console.log("TARGET FOUND");
+      target.addEventListener(
+        "targetFound",
+        async function () {
 
-        status.textContent = "✓ AR detected";
+          console.log("TARGET FOUND");
 
-        /*
-          ======================================
-          RESET POP-OUT
-          ======================================
+
+          status.textContent =
+            "✓ AR detected";
+
+
+          /*
+          ========================================
+          RESET PRODUCT
+          ========================================
           */
 
-        popout.setAttribute("position", "0 0 0.05");
+          product.setAttribute(
+            "position",
+            "0 0.08 0.05"
+          );
 
-        popout.setAttribute("rotation", "0 0 0");
+          product.setAttribute(
+            "rotation",
+            "0 0 0"
+          );
 
-        popout.setAttribute("scale", "0.15 0.15 0.15");
+          product.setAttribute(
+            "scale",
+            "0.15 0.15 0.15"
+          );
 
-        /*
-          ======================================
-          SCALE UP
-          ======================================
+
+          /*
+          ========================================
+          PRODUCT RISES FROM BASE
+          ========================================
           */
 
-        popout.setAttribute("animation__scale", {
-          property: "scale",
-          from: "0.15 0.15 0.15",
-          to: "1 1 1",
+          product.setAttribute(
+            "animation__rise",
+            {
+              property: "position",
 
-          dur: 900,
+              from: "0 0.08 0.05",
 
-          easing: "easeOutCubic",
-        });
+              to: "0 0.08 0.12",
 
-        /*
-          ======================================
-          MOVE OUT OF CARD
-          ======================================
+              dur: 900,
+
+              easing: "easeOutCubic"
+            }
+          );
+
+
+          /*
+          ========================================
+          PRODUCT GROWS
+          ========================================
           */
 
-        popout.setAttribute("animation__move", {
-          property: "position",
+          product.setAttribute(
+            "animation__scale",
+            {
+              property: "scale",
 
-          from: "0 0 0.05",
+              from: "0.15 0.15 0.15",
 
-          to: "0 0.20 0.75",
+              to: "1 1 1",
 
-          dur: 900,
+              dur: 900,
 
-          easing: "easeOutCubic",
-        });
+              easing: "easeOutBack"
+            }
+          );
 
-        /*
-          ======================================
-          ROTATE SLIGHTLY
-          ======================================
+
+          /*
+          ========================================
+          SLIGHT 3D TILT
+          ========================================
           */
 
-        popout.setAttribute("animation__rotate", {
-          property: "rotation",
+          product.setAttribute(
+            "animation__tilt",
+            {
+              property: "rotation",
 
-          from: "0 0 0",
+              from: "0 0 0",
 
-          to: "-8 -12 0",
+              to: "-4 -5 0",
 
-          dur: 900,
+              dur: 900,
 
-          easing: "easeOutCubic",
-        });
+              easing: "easeOutCubic"
+            }
+          );
 
-        /*
-          ======================================
+
+          /*
+          ========================================
           PLAY VIDEO
-          ======================================
+          ========================================
           */
 
-        video.muted = false;
+          video.muted = false;
 
-        try {
-          await video.play();
+          try {
 
-          console.log("VIDEO PLAYING");
-        } catch (error) {
-          console.error("VIDEO PLAY ERROR:", error);
+            await video.play();
+
+            console.log(
+              "VIDEO PLAYING"
+            );
+
+          } catch (error) {
+
+            console.error(
+              "VIDEO PLAY ERROR:",
+              error
+            );
+
+          }
+
         }
-      });
+      );
+
 
       /*
       ==========================================
@@ -407,41 +566,67 @@
       ==========================================
       */
 
-      target.addEventListener("targetLost", function () {
-        console.log("TARGET LOST");
+      target.addEventListener(
+        "targetLost",
+        function () {
 
-        status.textContent = "Point your camera at the card";
+          console.log(
+            "TARGET LOST"
+          );
 
-        video.pause();
 
-        /*
-          Return video to card
+          status.textContent =
+            "Point your camera at the card";
+
+
+          /*
+          Pause video
           */
 
-        popout.setAttribute("animation__return", {
-          property: "position",
+          video.pause();
 
-          from: "0 0.20 0.75",
 
-          to: "0 0 0.05",
+          /*
+          ========================================
+          PRODUCT GOES BACK INTO BASE
+          ========================================
+          */
 
-          dur: 400,
+          product.setAttribute(
+            "animation__hide",
+            {
+              property: "scale",
 
-          easing: "easeInCubic",
-        });
+              from: "1 1 1",
 
-        popout.setAttribute("animation__returnScale", {
-          property: "scale",
+              to: "0.15 0.15 0.15",
 
-          from: "1 1 1",
+              dur: 450,
 
-          to: "0.15 0.15 0.15",
+              easing: "easeInCubic"
+            }
+          );
 
-          dur: 400,
 
-          easing: "easeInCubic",
-        });
-      });
+          product.setAttribute(
+            "animation__hidePosition",
+            {
+              property: "position",
+
+              from: "0 0.08 0.12",
+
+              to: "0 0.08 0.05",
+
+              dur: 450,
+
+              easing: "easeInCubic"
+            }
+          );
+
+        }
+      );
+
     </script>
+
   </body>
 </html>
