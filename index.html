@@ -17,12 +17,6 @@
         overflow: hidden;
       }
 
-      /*
-      ==========================================
-      AR LANDING PAGE
-      ==========================================
-      */
-
       #arPage {
         position: fixed;
         inset: 0;
@@ -69,12 +63,6 @@
         cursor: pointer;
       }
 
-      /*
-      ==========================================
-      STATUS
-      ==========================================
-      */
-
       #status {
         position: fixed;
         z-index: 9998;
@@ -102,12 +90,9 @@
 
   <body>
 
-    <!-- ========================================
-         AR PAGE
-    ========================================= -->
+    <!-- AR PAGE -->
 
     <div id="arPage">
-
       <h1>✨ AR Experience</h1>
 
       <p>
@@ -117,7 +102,6 @@
       <button id="startAR">
         Start AR
       </button>
-
     </div>
 
 
@@ -128,9 +112,7 @@
     </div>
 
 
-    <!-- ========================================
-         MINDAR
-    ========================================= -->
+    <!-- MINDAR -->
 
     <a-scene
       mindar-image="imageTargetSrc: https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.mind;"
@@ -139,10 +121,6 @@
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false"
     >
-
-      <!-- ======================================
-           VIDEO ASSET
-      ======================================= -->
 
       <a-assets>
 
@@ -153,25 +131,16 @@
           playsinline
           webkit-playsinline
           preload="auto"
-          muted
         ></video>
 
       </a-assets>
 
-
-      <!-- ======================================
-           CAMERA
-      ======================================= -->
 
       <a-camera
         position="0 0 0"
         look-controls="enabled: false"
       ></a-camera>
 
-
-      <!-- ======================================
-           TARGET
-      ======================================= -->
 
       <a-entity
         id="target"
@@ -214,6 +183,9 @@
       const target =
         document.getElementById("target");
 
+      const videoPlane =
+        document.getElementById("videoPlane");
+
 
       /*
       ==========================================
@@ -232,16 +204,12 @@
 
       startAR.addEventListener(
         "click",
-        function () {
+        async function () {
 
           console.log(
             "START AR BUTTON"
           );
 
-
-          /*
-          Enable AR
-          */
 
           arStarted = true;
 
@@ -264,27 +232,96 @@
 
 
           /*
-          Keep video muted initially.
+          ========================================
+          IMPORTANT
+          ========================================
 
-          The click has now happened, so the
-          browser allows us to control the video.
+          We DON'T play/pause here anymore.
+
+          We only unlock the video through
+          the user's interaction.
           */
 
           video.muted = true;
 
+          try {
+
+            await video.play();
+
+            console.log(
+              "VIDEO UNLOCKED"
+            );
+
+          } catch (error) {
+
+            console.log(
+              "VIDEO UNLOCK:",
+              error
+            );
+
+          }
 
           /*
-          Do NOT play/pause here.
+          Pause after unlocking.
 
-          Wait for MindAR to detect the target.
+          The actual playback happens when
+          MindAR finds the target.
           */
 
-          console.log(
-            "AR READY"
-          );
+          video.pause();
 
         }
       );
+
+
+      /*
+      ==========================================
+      FORCE VIDEO TEXTURE UPDATE
+      ==========================================
+      */
+
+      function refreshVideoTexture() {
+
+        if (
+          !videoPlane ||
+          !videoPlane.components
+        ) {
+
+          return;
+
+        }
+
+
+        const materialComponent =
+          videoPlane.components.material;
+
+
+        if (
+          materialComponent &&
+          materialComponent.material
+        ) {
+
+          const material =
+            materialComponent.material;
+
+
+          /*
+          Tell Three.js that the texture
+          needs to update.
+          */
+
+          if (material.map) {
+
+            material.map.needsUpdate = true;
+
+          }
+
+
+          material.needsUpdate = true;
+
+        }
+
+      }
 
 
       /*
@@ -309,43 +346,55 @@
           }
 
 
-          /*
-          Update status
-          */
-
           status.textContent =
             "✓ AR detected";
 
 
           /*
           ========================================
-          RESET VIDEO
+          REFRESH TEXTURE
           ========================================
           */
+
+          refreshVideoTexture();
+
+
+          /*
+          ========================================
+          PLAY VIDEO
+          ========================================
+          */
+
+          video.muted = false;
+
 
           try {
 
             /*
-            Stop current playback
+            Give the browser one rendering
+            cycle before playing.
             */
 
-            video.pause();
+            await new Promise(
+              function (resolve) {
 
+                requestAnimationFrame(
+                  resolve
+                );
 
-            /*
-            Start from beginning
-            */
+              }
+            );
 
-            video.currentTime = 0;
-
-
-            /*
-            ======================================
-            PLAY
-            ======================================
-            */
 
             await video.play();
+
+
+            /*
+            Force another texture update
+            after playback starts.
+            */
+
+            refreshVideoTexture();
 
 
             console.log(
@@ -381,19 +430,19 @@
           );
 
 
-          /*
-          Update status
-          */
-
           status.textContent =
             "Point your camera at the card";
 
 
           /*
-          Pause video.
+          Pause only.
 
-          DO NOT unload it.
-          DO NOT change the A-Frame src.
+          DO NOT:
+          - load()
+          - change src
+          - remove video
+          - recreate a-video
+          - reset currentTime
           */
 
           video.pause();
@@ -409,33 +458,9 @@
 
       /*
       ==========================================
-      VIDEO DEBUGGING
+      VIDEO DEBUG
       ==========================================
       */
-
-      video.addEventListener(
-        "loadeddata",
-        function () {
-
-          console.log(
-            "VIDEO LOADED"
-          );
-
-        }
-      );
-
-
-      video.addEventListener(
-        "canplay",
-        function () {
-
-          console.log(
-            "VIDEO CAN PLAY"
-          );
-
-        }
-      );
-
 
       video.addEventListener(
         "playing",
